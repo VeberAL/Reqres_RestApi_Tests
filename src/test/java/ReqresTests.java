@@ -6,8 +6,12 @@ import static io.restassured.http.ContentType.JSON;
 import static org.hamcrest.Matchers.is;
 
 public class ReqresTests {
-    String baseUrl = "https://reqres.in";
 
+    @BeforeAll
+    static void beforeAll() {
+    RestAssured.baseURI = "https://reqres.in";
+    }
+    
     @Test
     void successfulLoginTest() {
         String authData = "{\"email\": \"peter@klaven\"}";
@@ -17,7 +21,7 @@ public class ReqresTests {
                 .contentType(JSON)
                 .log().uri()
                 .when()
-                .post(baseUrl + "/api/login")
+                .post("/api/login")
                 .then()
                 .log().status()
                 .log().body()
@@ -34,7 +38,7 @@ public class ReqresTests {
                 .contentType(JSON)
                 .log().uri()
                 .when()
-                .post(baseUrl + "/api/users")
+                .post("/api/users")
                 .then()
                 .log().status()
                 .log().body()
@@ -52,7 +56,7 @@ public class ReqresTests {
                 .contentType(JSON)
                 .log().uri()
                 .when()
-                .post(baseUrl + "/api/users")
+                .post("/api/users")
                 .then()
                 .log().status()
                 .log().body()
@@ -71,7 +75,7 @@ public class ReqresTests {
                 .contentType(JSON)
                 .log().uri()
                 .when()
-                .put(baseUrl + "/api/users/2")
+                .put("/api/users/2")
                 .then()
                 .log().status()
                 .log().body()
@@ -88,7 +92,7 @@ public class ReqresTests {
                 .contentType(JSON)
                 .log().uri()
                 .when()
-                .patch(baseUrl + "/api/users/2")
+                .patch("/api/users/2")
                 .then()
                 .log().status()
                 .log().body()
@@ -97,12 +101,14 @@ public class ReqresTests {
     }
 
     @Test
-    void unknown23Test() {
-
-        get(baseUrl + "/api/unknown/23")
+    void deleteUserTest() {
+        
+        given()
+                .log().uri()
+                .when()
+                .delete("/api/users/2")
                 .then()
                 .log().status()
-                .log().body()
-                .statusCode(404);
+                .statusCode(204);
     }
 }
