@@ -1,6 +1,9 @@
+package tests;
+
+import io.restassured.RestAssured;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.hamcrest.Matchers.is;
@@ -9,9 +12,9 @@ public class ReqresTests {
 
     @BeforeAll
     static void beforeAll() {
-    RestAssured.baseURI = "https://reqres.in";
+        RestAssured.baseURI = "https://reqres.in";
     }
-    
+
     @Test
     void successfulLoginTest() {
         String authData = "{\"email\": \"peter@klaven\"}";
@@ -102,7 +105,7 @@ public class ReqresTests {
 
     @Test
     void deleteUserTest() {
-        
+
         given()
                 .log().uri()
                 .when()
