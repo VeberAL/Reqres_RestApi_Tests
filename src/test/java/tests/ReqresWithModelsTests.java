@@ -2,7 +2,8 @@ package tests;
 
 import io.restassured.RestAssured;
 import models.UserBodyModel;
-import models.UserResponseModel;
+import models.CreateAndUpdateUserResponseModel;
+import models.LoginUserResponseModel;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -10,12 +11,14 @@ import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class ReqresWithModelsTests {
 
     @BeforeAll
     static void beforeAll() {
         RestAssured.baseURI = "https://reqres.in";
+        RestAssured.basePath = "/api";
     }
 
     @Test
@@ -25,17 +28,19 @@ public class ReqresWithModelsTests {
         authData.setEmail("aleo83@rambler.ru");
         authData.setName("Alex");
 
-        UserResponseModel response = given()
+        LoginUserResponseModel response = given()
                 .body(authData)
                 .contentType(JSON)
                 .log().uri()
+                .log().body()
+                .log().headers()
                 .when()
-                .post("/api/login")
+                .post("/login")
                 .then()
                 .log().status()
                 .log().body()
                 .statusCode(400)
-                .extract().as(UserResponseModel.class);
+                .extract().as(LoginUserResponseModel.class);
         assertEquals("Missing password", response.getError());
 
     }
@@ -46,18 +51,23 @@ public class ReqresWithModelsTests {
         authData.setName("Alex");
         authData.setJob("student");
 
-        given()
+        CreateAndUpdateUserResponseModel response = given()
                 .body(authData)
                 .contentType(JSON)
                 .log().uri()
+                .log().body()
+                .log().headers()
                 .when()
-                .post("/api/users")
+                .post("/users")
                 .then()
                 .log().status()
                 .log().body()
                 .statusCode(201)
-                .body("name", is("Alex"))
-                .body("job", is("student"));
+                .extract().as(CreateAndUpdateUserResponseModel.class);
+        assertEquals("Alex", response.getName());
+        assertEquals("student", response.getJob());
+        assertNotNull(response.getId());
+        assertNotNull(response.getCreatedAt());
     }
 
     @Test
@@ -68,19 +78,23 @@ public class ReqresWithModelsTests {
         authData.setId(111);
 
 
-        given()
+        CreateAndUpdateUserResponseModel response = given()
                 .body(authData)
                 .contentType(JSON)
                 .log().uri()
+                .log().body()
+                .log().headers()
                 .when()
-                .post("/api/users")
+                .post("/users")
                 .then()
                 .log().status()
                 .log().body()
                 .statusCode(201)
-                .body("name", is("Alex"))
-                .body("job", is("student"))
-                .body("id", is(111));
+                .extract().as(CreateAndUpdateUserResponseModel.class);
+        assertEquals("Alex", response.getName());
+        assertEquals("student", response.getJob());
+        assertEquals(111, response.getId());
+        assertNotNull(response.getCreatedAt());
     }
 
     @Test
@@ -93,8 +107,10 @@ public class ReqresWithModelsTests {
                 .body(authData)
                 .contentType(JSON)
                 .log().uri()
+                .log().body()
+                .log().headers()
                 .when()
-                .put("/api/users/2")
+                .put("/users/2")
                 .then()
                 .log().status()
                 .log().body()
@@ -111,8 +127,10 @@ public class ReqresWithModelsTests {
                 .body(authData)
                 .contentType(JSON)
                 .log().uri()
+                .log().body()
+                .log().headers()
                 .when()
-                .patch("/api/users/2")
+                .patch("/users/2")
                 .then()
                 .log().status()
                 .log().body()
@@ -125,8 +143,10 @@ public class ReqresWithModelsTests {
 
         given()
                 .log().uri()
+                .log().body()
+                .log().headers()
                 .when()
-                .delete("/api/users/2")
+                .delete("/users/2")
                 .then()
                 .log().status()
                 .statusCode(204);
