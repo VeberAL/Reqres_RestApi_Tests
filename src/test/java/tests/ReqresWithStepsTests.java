@@ -1,19 +1,21 @@
 package tests;
 
 import io.restassured.RestAssured;
-import models.UserBodyModel;
-import models.CreateAndUpdateUserResponseModel;
+import models.CreateUserResponseModel;
 import models.LoginUserResponseModel;
+import models.UpdateUserResponseModel;
+import models.UserBodyModel;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static helpers.CustomAllureListener.withCustomTemplates;
+import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
-import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-public class ReqresWithModelsTests {
+public class ReqresWithStepsTests {
 
     @BeforeAll
     static void beforeAll() {
@@ -28,23 +30,23 @@ public class ReqresWithModelsTests {
         authData.setEmail("aleo83@rambler.ru");
         authData.setName("Alex");
 
-        LoginUserResponseModel response = step("Make request", ()-> 
-              given()
-                .filter(withCustomTemplates())
-                .body(authData)
-                .contentType(JSON)
-                .log().uri()
-                .log().body()
-                .log().headers()
-                .when()
-                .post("/login")
-                .then()
-                .log().status()
-                .log().body()
-                .statusCode(400)
-                .extract().as(LoginUserResponseModel.class));
-        step("Check response", ()-> 
-        assertEquals("Missing password", response.getError()));
+        LoginUserResponseModel response = step("Make request", () ->
+                given()
+                        .filter(withCustomTemplates())
+                        .body(authData)
+                        .contentType(JSON)
+                        .log().uri()
+                        .log().body()
+                        .log().headers()
+                        .when()
+                        .post("/login")
+                        .then()
+                        .log().status()
+                        .log().body()
+                        .statusCode(400)
+                        .extract().as(LoginUserResponseModel.class));
+        step("Check response", () ->
+                assertEquals("Missing password", response.getError()));
     }
 
     @Test
@@ -53,27 +55,27 @@ public class ReqresWithModelsTests {
         authData.setName("Alex");
         authData.setJob("student");
 
-        CreateAndUpdateUserResponseModel response = step("Make request", ()->
-              given()
-                .filter(withCustomTemplates())
-                .body(authData)
-                .contentType(JSON)
-                .log().uri()
-                .log().body()
-                .log().headers()
-                .when()
-                .post("/users")
-                .then()
-                .log().status()
-                .log().body()
-                .statusCode(201)
-                .extract().as(CreateAndUpdateUserResponseModel.class));
-        step("Check response", ()-> {
-        assertEquals("Alex", response.getName());
-        assertEquals("student", response.getJob());
-        assertNotNull(response.getId());
-        assertNotNull(response.getCreatedAt());
-        )};
+        CreateUserResponseModel response = step("Make request", () ->
+                given()
+                        .filter(withCustomTemplates())
+                        .body(authData)
+                        .contentType(JSON)
+                        .log().uri()
+                        .log().body()
+                        .log().headers()
+                        .when()
+                        .post("/users")
+                        .then()
+                        .log().status()
+                        .log().body()
+                        .statusCode(201)
+                        .extract().as(CreateUserResponseModel.class));
+        step("Check response", () -> {
+            assertEquals("Alex", response.getName());
+            assertEquals("student", response.getJob());
+            assertNotNull(response.getId());
+            assertNotNull(response.getCreatedAt());
+        });
     }
 
     @Test
@@ -84,27 +86,27 @@ public class ReqresWithModelsTests {
         authData.setId(111);
 
 
-        CreateAndUpdateUserResponseModel response = step("Make request", ()->
-              given()
-                .filter(withCustomTemplates())
-                .body(authData)
-                .contentType(JSON)
-                .log().uri()
-                .log().body()
-                .log().headers()
-                .when()
-                .post("/users")
-                .then()
-                .log().status()
-                .log().body()
-                .statusCode(201)
-                .extract().as(CreateAndUpdateUserResponseModel.class));
-        step("Check response", ()-> {
-        assertEquals("Alex", response.getName());
-        assertEquals("student", response.getJob());
-        assertEquals(111, response.getId());
-        assertNotNull(response.getCreatedAt());
-        )};
+        CreateUserResponseModel response = step("Make request", () ->
+                given()
+                        .filter(withCustomTemplates())
+                        .body(authData)
+                        .contentType(JSON)
+                        .log().uri()
+                        .log().body()
+                        .log().headers()
+                        .when()
+                        .post("/users")
+                        .then()
+                        .log().status()
+                        .log().body()
+                        .statusCode(201)
+                        .extract().as(CreateUserResponseModel.class));
+        step("Check response", () -> {
+            assertEquals("Alex", response.getName());
+            assertEquals("student", response.getJob());
+            assertEquals(111, response.getId());
+            assertNotNull(response.getCreatedAt());
+        });
     }
 
     @Test
@@ -112,24 +114,24 @@ public class ReqresWithModelsTests {
 
         UserBodyModel authData = new UserBodyModel();
         authData.setJob("student");
-      
-        CreateAndUpdateUserResponseModel response = step("Make request", ()->
-            given()
-                .filter(withCustomTemplates())
-                .body(authData)
-                .contentType(JSON)
-                .log().uri()
-                .log().body()
-                .log().headers()
-                .when()
-                .put("/users/2")
-                .then()
-                .log().status()
-                .log().body()
-                .statusCode(200)
-                .extract().as(CreateAndUpdateUserResponseModel.class)));
-        step("Check response", ()-> 
-        assertEquals("student", response.getJob()));
+
+        UpdateUserResponseModel response = step("Make request", () ->
+                given()
+                        .filter(withCustomTemplates())
+                        .body(authData)
+                        .contentType(JSON)
+                        .log().uri()
+                        .log().body()
+                        .log().headers()
+                        .when()
+                        .put("/users/2")
+                        .then()
+                        .log().status()
+                        .log().body()
+                        .statusCode(200)
+                        .extract().as(UpdateUserResponseModel.class));
+        step("Check response", () ->
+                assertEquals("student", response.getJob()));
     }
 
     @Test
@@ -137,37 +139,37 @@ public class ReqresWithModelsTests {
         UserBodyModel authData = new UserBodyModel();
         authData.setName("Alex");
 
-        CreateAndUpdateUserResponseModel response = step("Make request", ()->
-             given()
-                .filter(withCustomTemplates())
-                .body(authData)
-                .contentType(JSON)
-                .log().uri()
-                .log().body()
-                .log().headers()
-                .when()
-                .patch("/users/2")
-                .then()
-                .log().status()
-                .log().body()
-                .statusCode(200)
-                .extract().as(CreateAndUpdateUserResponseModel.class)));
-        step("Check response", ()-> 
-        assertEquals("Alex", response.getName()));
+        UpdateUserResponseModel response = step("Make request", () ->
+                given()
+                        .filter(withCustomTemplates())
+                        .body(authData)
+                        .contentType(JSON)
+                        .log().uri()
+                        .log().body()
+                        .log().headers()
+                        .when()
+                        .patch("/users/2")
+                        .then()
+                        .log().status()
+                        .log().body()
+                        .statusCode(200)
+                        .extract().as(UpdateUserResponseModel.class));
+        step("Check response", () ->
+                assertEquals("Alex", response.getName()));
     }
 
     @Test
     void deleteUserTest() {
-        step("Make request", ()->
-             given()
-                .filter(withCustomTemplates())
-                .log().uri()
-                .log().body()
-                .log().headers()
-                .when()
-                .delete("/users/2")
-                .then()
-                .log().status()
-                .statusCode(204));
+        step("Make request", () ->
+                given()
+                        .filter(withCustomTemplates())
+                        .log().uri()
+                        .log().body()
+                        .log().headers()
+                        .when()
+                        .delete("/users/2")
+                        .then()
+                        .log().status()
+                        .statusCode(204));
     }
 }

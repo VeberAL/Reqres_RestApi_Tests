@@ -1,15 +1,15 @@
 package tests;
 
 import io.restassured.RestAssured;
-import models.UserBodyModel;
-import models.CreateAndUpdateUserResponseModel;
+import models.CreateUserResponseModel;
 import models.LoginUserResponseModel;
+import models.UpdateUserResponseModel;
+import models.UserBodyModel;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static io.restassured.RestAssured.given;
 import static io.restassured.http.ContentType.JSON;
-import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -51,7 +51,7 @@ public class ReqresWithModelsTests {
         authData.setName("Alex");
         authData.setJob("student");
 
-        CreateAndUpdateUserResponseModel response = given()
+        CreateUserResponseModel response = given()
                 .body(authData)
                 .contentType(JSON)
                 .log().uri()
@@ -63,7 +63,7 @@ public class ReqresWithModelsTests {
                 .log().status()
                 .log().body()
                 .statusCode(201)
-                .extract().as(CreateAndUpdateUserResponseModel.class);
+                .extract().as(CreateUserResponseModel.class);
         assertEquals("Alex", response.getName());
         assertEquals("student", response.getJob());
         assertNotNull(response.getId());
@@ -78,7 +78,7 @@ public class ReqresWithModelsTests {
         authData.setId(111);
 
 
-        CreateAndUpdateUserResponseModel response = given()
+        CreateUserResponseModel response = given()
                 .body(authData)
                 .contentType(JSON)
                 .log().uri()
@@ -90,7 +90,7 @@ public class ReqresWithModelsTests {
                 .log().status()
                 .log().body()
                 .statusCode(201)
-                .extract().as(CreateAndUpdateUserResponseModel.class);
+                .extract().as(CreateUserResponseModel.class);
         assertEquals("Alex", response.getName());
         assertEquals("student", response.getJob());
         assertEquals(111, response.getId());
@@ -103,7 +103,7 @@ public class ReqresWithModelsTests {
         UserBodyModel authData = new UserBodyModel();
         authData.setJob("student");
 
-         CreateAndUpdateUserResponseModel response = given()
+        UpdateUserResponseModel response = given()
                 .body(authData)
                 .contentType(JSON)
                 .log().uri()
@@ -115,16 +115,16 @@ public class ReqresWithModelsTests {
                 .log().status()
                 .log().body()
                 .statusCode(200)
-                .extract().as(CreateAndUpdateUserResponseModel.class);
-                assertEquals("student", response.getJob());
+                .extract().as(UpdateUserResponseModel.class);
+        assertEquals("student", response.getJob());
     }
 
     @Test
     void successfullUpdateUserJobWithPatchTest() {
         UserBodyModel authData = new UserBodyModel();
         authData.setName("Alex");
-        
-        CreateAndUpdateUserResponseModel response = given()
+
+        UpdateUserResponseModel response = given()
                 .body(authData)
                 .contentType(JSON)
                 .log().uri()
@@ -136,8 +136,8 @@ public class ReqresWithModelsTests {
                 .log().status()
                 .log().body()
                 .statusCode(200)
-                .extract().as(CreateAndUpdateUserResponseModel.class);
-                assertEquals("Alex", response.getName());
+                .extract().as(UpdateUserResponseModel.class);
+        assertEquals("Alex", response.getName());
     }
 
     @Test
