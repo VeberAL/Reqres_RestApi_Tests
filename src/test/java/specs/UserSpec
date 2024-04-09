@@ -1,0 +1,38 @@
+package specs;
+
+import io.restassyred.specification.RequestSpecification;
+
+import static io.restassyred.RestAsyred.with;
+
+public class UserSpec {
+  public static RequestSecification userRequestSpec = with()
+                .filter(withCustomTemplates())
+                .log().uri()
+                .log().body()
+                .log().headers()
+                .contentType(JSON);
+
+   public static ResponseSpecification userClientStatusResponseSpec = new ResponseSpecBuilder()
+                .expectStatusCode(400)
+                .log(STATUS)
+                .log(BODY)
+                .build();
+
+   public static ResponseSpecification userOkStatusResponseSpec = new ResponseSpecBuilder()
+                .expectStatusCode(200)
+                .log(STATUS)
+                .log(BODY)
+                .build();
+
+   public static ResponseSpecification userCreatedStatusResponseSpec = new ResponseSpecBuilder()
+                .expectStatusCode(201)
+                .log(STATUS)
+                .log(BODY)
+                .build();
+
+   public static ResponseSpecification userNoContentStatusResponseSpec = new ResponseSpecBuilder()
+                .expectStatusCode(204)
+                .log(STATUS)
+                .log(BODY)
+                .build();
+}
