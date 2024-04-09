@@ -103,7 +103,7 @@ public class ReqresWithModelsTests {
         UserBodyModel authData = new UserBodyModel();
         authData.setJob("student");
 
-        given()
+         CreateAndUpdateUserResponseModel response = given()
                 .body(authData)
                 .contentType(JSON)
                 .log().uri()
@@ -115,15 +115,16 @@ public class ReqresWithModelsTests {
                 .log().status()
                 .log().body()
                 .statusCode(200)
-                .body("job", is("student"));
+                .extract().as(CreateAndUpdateUserResponseModel.class);
+                assertEquals("student", response.getJob());
     }
 
     @Test
     void successfullUpdateUserJobWithPatchTest() {
         UserBodyModel authData = new UserBodyModel();
         authData.setName("Alex");
-
-        given()
+        
+        CreateAndUpdateUserResponseModel response = given()
                 .body(authData)
                 .contentType(JSON)
                 .log().uri()
@@ -135,7 +136,8 @@ public class ReqresWithModelsTests {
                 .log().status()
                 .log().body()
                 .statusCode(200)
-                .body("name", is("Alex"));
+                .extract().as(CreateAndUpdateUserResponseModel.class);
+                assertEquals("Alex", response.getName());
     }
 
     @Test
